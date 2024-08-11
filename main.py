@@ -10,8 +10,6 @@ def main():
     perform_search_and_filter(driver)
 
     # Đóng trình duyệt sau khi hoàn tất
-    # button = driver.find_element(By.XPATH, value="//button[@id='search-job']")
-    # button.click()
     time.sleep(5)  # Dừng 5 giây để xem trang web
     print("Final step: Completed")
     driver.quit()

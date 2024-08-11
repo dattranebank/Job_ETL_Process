@@ -4,12 +4,15 @@ from telnetlib import EC
 import requests
 from selenium import webdriver
 from selenium.common import WebDriverException, NoSuchDriverException, NoSuchElementException
+from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import sys
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def configure_and_open_browser(url):
@@ -29,13 +32,10 @@ def configure_and_open_browser(url):
         print("Gợi ý cách sửa lỗi: Sai đường dẫn")
         sys.exit("Chương trình kết thúc do lỗi")
 
-    # Kiểm tra trạng thái của URL
     try:
-        response = requests.head(url, allow_redirects=True)
-        if response.status_code == 200:
-            # URL hợp lệ, tiếp tục mở trang web
-            driver.get(url)
-    except requests.RequestException as e:
+        # Mở trang web
+        driver.get(url)
+    except Exception as e:
         print("Nơi xảy ra lỗi: Hàm configure_and_open_browser")
         print(f"Chi tiết lỗi: {e}")
         print("Gợi ý cách sửa lỗi: Sai địa chỉ web")
@@ -46,33 +46,33 @@ def configure_and_open_browser(url):
 
 
 def perform_search_and_filter(driver):
+    # Tạo WebDriverWait
+    wait = WebDriverWait(driver, timeout=10)
 
-        # Tìm phần tử thanh tìm kiếm bằng XPath, dựa vào name và placeholder
-    search_input = driver.find_element(By.XPATH,
-                                           value='//input[@name="q" and @placeholder="Nhập vị trí muốn ứng tuyển"]')
-
-
-
-
+    # Nhập nội dung trong thanh tìm kiếm
+    search_input = wait.until(
+        EC.presence_of_element_located((By.XPATH, '//input[@name="q" and @placeholder="Nhập vị trí muốn ứng tuyển"]')))
     search_input.send_keys('Thực tập')
-    search_input.submit()
-
-    print("Step 2: Input value")
-    time.sleep(5)
+    search_input.send_keys(Keys.RETURN)
 
     # Tìm phần tử icon và click vào để mở danh sách gợi ý
-    icon_element = driver.find_element(By.CSS_SELECTOR, 'i.svicon-chevron-down.text-sm.text-primary.ml-2')
+    icon_element = wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'i.svicon-chevron-down.text-sm.text-primary.ml-2'))
+    )
+    time.sleep(2)
     icon_element.click()
-    time.sleep(5)
+    time.sleep(2)
 
     # Tìm phần tử input và nhập giá trị "TP.HCM"
-    input_element = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Lọc theo tỉnh thành"]')
+    input_element = wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Lọc theo tỉnh thành"]'))
+    )
     input_element.send_keys("TP.HCM")
-    time.sleep(5)
 
     # Đợi cho phần tử button với văn bản "TP.HCM" xuất hiện
-    wait = WebDriverWait(driver, timeout=5)
-    button_element = wait.until(EC.visibility_of_element_located((By.XPATH, '//button[contains(text(), "TP.HCM")]')))
+    button_element = wait.until(
+        EC.visibility_of_element_located((By.XPATH, '//button[contains(text(), "TP.HCM")]'))
+    )
     button_element.click()
-    print(f"Step 2: Opened web successfully at ")
 
+    print(f"Step 2: Opened web successfully")
