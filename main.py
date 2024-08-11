@@ -7,7 +7,9 @@ def main():
     driver = configure_and_open_browser(url)
 
     # Step 2: Lọc và tìm kiếm dữ liệu
-    perform_search_and_filter(driver)
+    content = "Thực tập"
+    location = "TP.HCM"
+    perform_search_and_filter(driver, content, location)
 
     # Đóng trình duyệt sau khi hoàn tất
     time.sleep(5)  # Dừng 5 giây để xem trang web

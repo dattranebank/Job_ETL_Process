@@ -45,34 +45,32 @@ def configure_and_open_browser(url):
     return driver
 
 
-def perform_search_and_filter(driver):
+def perform_search_and_filter(driver, content, location):
     # Tạo WebDriverWait
     wait = WebDriverWait(driver, timeout=10)
 
     # Nhập nội dung trong thanh tìm kiếm
     search_input = wait.until(
         EC.presence_of_element_located((By.XPATH, '//input[@name="q" and @placeholder="Nhập vị trí muốn ứng tuyển"]')))
-    search_input.send_keys('Thực tập')
+    search_input.send_keys(content)
     search_input.send_keys(Keys.RETURN)
 
-    # Tìm phần tử icon và click vào để mở danh sách gợi ý
+    time.sleep(2)
+    # Tìm icon liệt kê location
     icon_element = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, 'i.svicon-chevron-down.text-sm.text-primary.ml-2'))
     )
-    time.sleep(2)
     icon_element.click()
-    time.sleep(2)
 
-    # Tìm phần tử input và nhập giá trị "TP.HCM"
+    # Tìm phần tử input location và nhập giá trị "TP.HCM"
     input_element = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, 'input[placeholder="Lọc theo tỉnh thành"]'))
     )
-    input_element.send_keys("TP.HCM")
+    input_element.send_keys(location)
 
     # Đợi cho phần tử button với văn bản "TP.HCM" xuất hiện
     button_element = wait.until(
-        EC.visibility_of_element_located((By.XPATH, '//button[contains(text(), "TP.HCM")]'))
+        EC.visibility_of_element_located((By.XPATH, f'//button[contains(text(), "{location}")]'))
     )
     button_element.click()
-
-    print(f"Step 2: Opened web successfully")
+    print("Step 2: Performed search and applied location filter")
