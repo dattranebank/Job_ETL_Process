@@ -1,5 +1,4 @@
 import time
-from telnetlib import EC
 
 import requests
 from selenium import webdriver
@@ -23,7 +22,7 @@ def configure_and_open_browser(url):
 
     try:
         # Đặt đường dẫn đến ChromeDriver
-        service = Service('H:\\Web Scraping\\2. Selenium\\vieclam24h\\chromedriver.exe')
+        service = Service('H:/Web Scraping/2. Selenium/vieclam24h/chrome_driver/chromedriver.exe')
         # Khởi tạo trình duyệt
         driver = webdriver.Chrome(service=service, options=chrome_options)
     except (WebDriverException, NoSuchDriverException) as e:
